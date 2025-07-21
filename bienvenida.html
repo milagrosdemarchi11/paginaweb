@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bienvenida</title>
+  <link href="https://fonts.googleapis.com/css2?family=Mystery+Quest&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("imagenes/fondomagico.jpg") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Mystery Quest', cursive;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-top: 20vh;
+      text-shadow: 2px 2px 5px #000;
+      animation: entrada 2s ease-out forwards;
+      opacity: 0;
+    }
+
+    @keyframes entrada {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-entrar {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1.5em;
+      background: #ff77dd;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px #ffccff, 0 0 20px #ff99ff;
+      transition: transform 0.3s;
+      animation: entrada 2s 0.5s ease-out forwards;
+      opacity: 0;
+    }
+
+    .btn-entrar:hover {
+      transform: scale(1.1);
+    }
+
+    .mariposa, .particula {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .mariposa {
+      width: 40px;
+      height: 40px;
+      background-image: url('imagenes/mariposa.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      animation: flotar 20s linear infinite;
+    }
+
+    .particula {
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #fff, #00f0ff);
+      border-radius: 50%;
+      animation: flotar 15s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes flotar {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      25% { transform: translate(50px, -100px) rotate(90deg); }
+      50% { transform: translate(-100px, -200px) rotate(180deg); }
+      75% { transform: translate(80px, -300px) rotate(270deg); }
+      100% { transform: translate(0, -400px) rotate(360deg); }
+    }
+
+    .destello {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(to bottom, #fffbe0, #ffe680, #ffcc00);
+      opacity: 1;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      animation: desaparecer 0.8s ease forwards;
+      animation-delay: 2.5s;
+    }
+
+    .mensaje-magico {
+      font-size: 2em;
+      color: #000;
+    }
+
+    @keyframes desaparecer {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Bienvenido a mi mundo mágico</h1>
+  <button class="btn-entrar" onclick="efectoDestello()">Entrar</button>
+
+  <!-- Sonido mágico -->
+  <audio id="sonidoMagico" src="imagenes/sonido.mp3" preload="auto"></audio>
+
+  <script>
+    function efectoDestello() {
+      const sonido = document.getElementById("sonidoMagico");
+
+      const destello = document.createElement('div');
+      destello.classList.add('destello');
+
+      const mensaje = document.createElement('div');
+      mensaje.classList.add('mensaje-magico');
+      mensaje.textContent = 'Cargando magia...';
+
+      destello.appendChild(mensaje);
+      document.body.appendChild(destello);
+
+      sonido.play();
+
+      sonido.onended = () => {
+        window.location.href = 'pagina.html';
+      };
+    }
+
+    for (let i = 0; i < 20; i++) {
+      const el = document.createElement('div');
+      el.className = 'mariposa';
+      el.style.top = Math.random() * 100 + 'vh';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDelay = Math.random() * 20 + 's';
+      el.style.animationDuration = 10 + Math.random() * 20 + 's';
+      document.body.appendChild(el);
+    }
+
+    for (let i = 0; i < 50; i++) {
+      const p = document.createElement('div');
+      p.className = 'particula';
+      p.style.top = Math.random() * 100 + 'vh';
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.animationDelay = Math.random() * 20 + 's';
+      p.style.animationDuration = 10 + Math.random() * 20 + 's';
+      document.body.appendChild(p);
+    }
+  </script>
+</body>
+</html>
