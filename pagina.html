@@ -5,8 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>El Rincón de los Duendes</title>
   <link rel="stylesheet" href="deco.css" />
-  <!-- Fuentes mágicas -->
   <link href="https://fonts.googleapis.com/css2?family=Mystery+Quest&family=Quicksand&display=swap" rel="stylesheet">
+  <style>
+    /* ESTILOS PARA LOS DUENDES EN HORIZONTAL */
+    .contenedor-duendes {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      padding: 15px;
+      width: 200px;
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    #animaciones-magicas {
+      pointer-events: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: 1000;
+    }
+
+    .mariposa-img {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      will-change: transform, top, left;
+      user-select: none;
+      pointer-events: none;
+      transition: transform 0.2s linear;
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -20,134 +64,77 @@
 
   <main>
     <h2>Mis Duendes</h2>
-    <div class="card">
-      <img src="imagenes/duende1.jpg" alt="Duende Encantado" />
-      <h3>Duende Encantado</h3>
-      <p>$10.000</p>
+    <div class="contenedor-duendes">
+      <div class="card">
+        <img src="imagenes/duende1.jpg" alt="Duende Encantado" />
+        <h3>Duende Encantado</h3>
+        <p>$10.000</p>
+      </div>
+      <div class="card">
+        <img src="imagenes/duende2.jpg" alt="Duende Lector" />
+        <h3>Duende Lector</h3>
+        <p>$8.000</p>
+      </div>
+      <div class="card">
+        <img src="imagenes/duende3.jpg" alt="Duende Alegre" />
+        <h3>Duende Alegre</h3>
+        <p>$10.000</p>
+      </div>
     </div>
   </main>
 
   <footer>
     © 2025 El Rincón de los Duendes
   </footer>
-  <style>
-        #animaciones-magicas {
-            pointer-events: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            z-index: 1000;
-        }
 
-        .mariposa-img {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            will-change: transform, top, left;
-            user-select: none;
-            pointer-events: none;
-            /* Para que gire suavemente */
-            transition: transform 0.2s linear;
-        }
-    </style>
+  <!-- ANIMACIÓN DE MARIPOSAS -->
+  <div id="animaciones-magicas"></div>
+  <script>
+    const contenedor = document.getElementById('animaciones-magicas');
+    const cantidad = 15;
+    const mariposas = [];
 
-    <div id="animaciones-magicas"></div>
+    for (let i = 0; i < cantidad; i++) {
+      const mariposa = document.createElement('img');
+      mariposa.src = 'imagenes/mariposa.png';
+      mariposa.className = 'mariposa-img';
+      const posX = Math.random() * (window.innerWidth - 50);
+      const posY = Math.random() * (window.innerHeight - 50);
+      const velX = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
+      const velY = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
+      mariposas.push({ el: mariposa, x: posX, y: posY, vx: velX, vy: velY, angle: Math.random() * 360 });
+      mariposa.style.left = posX + 'px';
+      mariposa.style.top = posY + 'px';
+      mariposa.style.transform = `rotate(${mariposas[i].angle}deg)`;
+      contenedor.appendChild(mariposa);
+    }
 
-    <script>
-        const contenedor = document.getElementById('animaciones-magicas');
-        const cantidad = 15;
-        const mariposas = [];
+    const anchoMariposa = 50;
+    const altoMariposa = 50;
 
-        // Crear mariposas con posición y velocidad inicial aleatoria
-        for (let i = 0; i < cantidad; i++) {
-            const mariposa = document.createElement('img');
-            mariposa.src = 'imagenes/mariposa.png'; // Cambia a tu imagen
-            mariposa.className = 'mariposa-img';
+    function animar() {
+      mariposas.forEach(m => {
+        m.x += m.vx;
+        m.y += m.vy;
+        if (m.x <= 0 || m.x >= window.innerWidth - anchoMariposa) m.vx *= -1;
+        if (m.y <= 0 || m.y >= window.innerHeight - altoMariposa) m.vy *= -1;
+        m.angle += m.vx > 0 ? 2 : -2;
+        m.angle = m.angle % 360;
+        m.el.style.left = m.x + 'px';
+        m.el.style.top = m.y + 'px';
+        m.el.style.transform = `rotate(${m.angle}deg)`;
+      });
+      requestAnimationFrame(animar);
+    }
 
-            // Posición inicial aleatoria dentro de la pantalla
-            const posX = Math.random() * (window.innerWidth - 50);
-            const posY = Math.random() * (window.innerHeight - 50);
+    animar();
 
-            // Velocidad aleatoria en px por frame (puede ser positiva o negativa)
-            const velX = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
-            const velY = (Math.random() * 0.9 + 0.3) * (Math.random() < 0.5 ? 1 : -1);
-
-
-            // Guardamos estado en el objeto
-            mariposas.push({
-                el: mariposa,
-                x: posX,
-                y: posY,
-                vx: velX,
-                vy: velY,
-                angle: Math.random() * 360 // rotación inicial
-            });
-
-            // Posicionamos la mariposa
-            mariposa.style.left = posX + 'px';
-            mariposa.style.top = posY + 'px';
-            mariposa.style.transform = `rotate(${mariposas[i].angle}deg)`;
-
-            contenedor.appendChild(mariposa);
-        }
-
-        // Tamaño de la mariposa para rebotes
-        const anchoMariposa = 50;
-        const altoMariposa = 50;
-
-        function animar() {
-            mariposas.forEach(m => {
-                // Actualizar posición
-                m.x += m.vx;
-                m.y += m.vy;
-
-                // Rebotar en bordes X
-                if (m.x <= 0) {
-                    m.x = 0;
-                    m.vx *= -1;
-                } else if (m.x >= window.innerWidth - anchoMariposa) {
-                    m.x = window.innerWidth - anchoMariposa;
-                    m.vx *= -1;
-                }
-
-                // Rebotar en bordes Y
-                if (m.y <= 0) {
-                    m.y = 0;
-                    m.vy *= -1;
-                } else if (m.y >= window.innerHeight - altoMariposa) {
-                    m.y = window.innerHeight - altoMariposa;
-                    m.vy *= -1;
-                }
-
-                // Actualizar rotación según dirección X (gira mirando hacia donde va)
-                m.angle += m.vx > 0 ? 2 : -2;
-                m.angle = m.angle % 360;
-
-                // Aplicar posición y rotación
-                m.el.style.left = m.x + 'px';
-                m.el.style.top = m.y + 'px';
-                m.el.style.transform = `rotate(${m.angle}deg)`;
-            });
-
-            requestAnimationFrame(animar);
-        }
-
-        // Empezar animación
-        animar();
-
-        // Ajustar posiciones si cambia tamaño de ventana (simple: solo limitar)
-        window.addEventListener('resize', () => {
-            mariposas.forEach(m => {
-                if (m.x > window.innerWidth - anchoMariposa) m.x = window.innerWidth - anchoMariposa;
-                if (m.y > window.innerHeight - altoMariposa) m.y = window.innerHeight - altoMariposa;
-            });
-        });
-    </script>
-
-  
+    window.addEventListener('resize', () => {
+      mariposas.forEach(m => {
+        if (m.x > window.innerWidth - anchoMariposa) m.x = window.innerWidth - anchoMariposa;
+        if (m.y > window.innerHeight - altoMariposa) m.y = window.innerHeight - altoMariposa;
+      });
+    });
+  </script>
 </body>
 </html>
-
